@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f4f0e8;
+  --color-ink: #0b0b0b;
+  --color-accent: #ff3b30;
+  --color-accent-2: #00c853;
+  --color-accent-3: #0066ff;
+  --shadow-brutal: 10px 10px 0 #000;
+  --shadow-brutal-soft: 6px 6px 0 #000;
+  --font-sans: "Arial", "Helvetica Neue", sans-serif;
+  --font-mono: "Courier New", "IBM Plex Mono", monospace;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0)),
+      repeating-linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.03) 0,
+        rgba(0, 0, 0, 0.03) 1px,
+        transparent 1px,
+        transparent 24px
+      ),
+      radial-gradient(circle at top, #ffffff 0%, #f4f0e8 44%, #ece4d7 100%);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  a,
+  button {
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+}
+
+@layer utilities {
+  .brutal-frame {
+    border: 4px solid #000;
+    box-shadow: var(--shadow-brutal);
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  .brutal-frame-soft {
+    border: 3px solid #000;
+    box-shadow: var(--shadow-brutal-soft);
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .brutal-chip {
+    border: 2px solid #000;
+    box-shadow: 4px 4px 0 #000;
+    background: #fff;
+  }
+
+  .brutal-hover:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 12px 12px 0 #000;
+  }
+
+  .grid-noise {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+}
