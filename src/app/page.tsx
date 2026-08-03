@@ -46,7 +46,7 @@ export default function Home() {
 
       {/* Main Outer Container */}
       <div className="relative mx-auto flex w-full flex-col gap-16 px-4 py-6 sm:gap-24 sm:px-6 md:px-10 lg:px-12 lg:py-10">
-        
+
         {/* ========================================================================= */}
         {/* SECCIÓN 1: HERO & LIVE BLUEMAP SIDE-BY-SIDE (Ultra Wide Span)             */}
         {/* ========================================================================= */}
@@ -343,102 +343,103 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* ========================================================================= */}
-        {/* SECCIÓN 4: PITCH COMERCIAL & CONTACTO (#contacto) - Narrower Encased Box  */}
-        {/* ========================================================================= */}
-        <motion.section
-          id="contacto"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={staggerContainerVariants}
-          className="mx-auto w-full max-w-[1280px] border-4 border-black bg-black p-8 sm:p-14 lg:p-16 text-white shadow-[10px_10px_0px_rgba(0,0,0,1)] dark:border-amber-400 dark:bg-[#06030b] dark:shadow-[10px_10px_0px_rgba(251,191,36,0.35)] my-6 sm:my-10"
-        >
-          <div className="space-y-12">
-            <motion.div variants={staggerItemVariants} className="text-center space-y-6">
-              {/* Professional Freelance Contact Avatar */}
-              <div className="flex justify-center">
-                <Image
-                  src={jovGlitchIcon}
-                  alt="Jess Vega Freelance / Contact"
-                  className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-2 border-amber-400 object-cover shadow-[6px_6px_0px_rgba(251,191,36,0.35)]"
-                />
-              </div>
-
-              <span className="inline-block border-2 border-amber-400 bg-amber-400 px-5 py-1.5 font-mono text-xs font-black uppercase text-black shadow-[4px_4px_0px_rgba(255,255,255,0.2)]">
-                TRABAJEMOS JUNTOS
-              </span>
-
-              <h2 className="text-3xl font-black uppercase tracking-tight text-white sm:text-5xl lg:text-6xl">
-                ¿NECESITAS UN SERVIDOR O INFRAESTRUCTURA ASÍ?
-              </h2>
-
-              <p className="mx-auto max-w-3xl font-mono text-xs sm:text-base leading-relaxed text-purple-200/90">
-                Logremos esto juntos. Diseños de red, servidores autohospedados y despliegues con infraestructura actual, moderna y segura.
-              </p>
-
-              <div className="pt-2 flex justify-center">
-                <Button
-                  href={mcData.portfolioUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  variant="destructive"
-                  className="bg-[#fbbf24] text-black border-2 border-white hover:bg-amber-400 dark:border-amber-400 dark:bg-amber-400 dark:text-black font-black text-sm px-8 py-4 shadow-[6px_6px_0px_rgba(255,255,255,0.9)]"
-                >
-                  [ CONTACTAR Y VER PORTAFOLIO ↗ ]
-                </Button>
-              </div>
-            </motion.div>
-
-            <div className="border-t border-white/20 w-full" />
-
-            <motion.div variants={staggerItemVariants} className="grid gap-8 md:grid-cols-3 font-mono text-xs sm:text-sm">
-              <div className="space-y-3">
-                <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">REDES & CONTACTO</h3>
-                <ul className="space-y-2">
-                  <li>
-                    <a href={mcData.githubUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white transition-colors flex items-center gap-2">
-                      <GithubIcon className="h-4 w-4" /> GitHub Repository ↗
-                    </a>
-                  </li>
-                  <li>
-                    <a href={mcData.portfolioUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white transition-colors">
-                      Portafolio Principal (JessVega.me) ↗
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">NAVEGACIÓN DE SERVIDOR</h3>
-                <ul className="space-y-2">
-                  <li><a href="#descargas" className="text-purple-200 hover:text-white">Descargas de Modpacks</a></li>
-                  <li><a href={mcData.blueMapUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white">Mapa en Vivo (http://mapa.mc.jessvega.me/)</a></li>
-                  <li><a href="#infra" className="text-purple-200 hover:text-white">Arquitectura & Infraestructura</a></li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">SPONSORS & INFRAESTRUCTURA</h3>
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded border border-white/20">
-                    <img src={mcData.playitLogo} alt="Playit.gg" className="h-4 w-4 rounded-full object-cover" />
-                    <span className="text-xs font-bold text-amber-300">Playit.gg</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded border border-white/20">
-                    <img src={mcData.mediafireLogo} alt="MediaFire" className="h-3 w-auto object-contain" />
-                    <span className="text-xs font-bold text-amber-300">MediaFire</span>
-                  </div>
-                </div>
-                <p className="text-xs text-purple-200/70 leading-relaxed pt-1">
-                  © 2026 {mcData.title}. Powered by Jess Vega. Todos los derechos reservados.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </motion.section>
-
       </div>
+
+      {/* ========================================================================= */}
+      {/* SECCIÓN 4: PITCH COMERCIAL & CONTACTO (Full Width Extended Black BG)     */}
+      {/* ========================================================================= */}
+      <motion.section
+        id="contacto"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={staggerContainerVariants}
+        className="w-full border-t-4 border-black bg-black text-white dark:border-amber-400 dark:bg-[#06030b] mt-12 py-12 sm:py-16 px-4 sm:px-6 lg:px-8"
+      >
+        <div className="mx-auto w-full max-w-[1280px] space-y-12">
+          <motion.div variants={staggerItemVariants} className="text-center space-y-6">
+            {/* Professional Freelance Contact Avatar */}
+            <div className="flex justify-center">
+              <Image
+                src={jovGlitchIcon}
+                alt="Jess Vega Freelance / Contact"
+                className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-2 border-amber-400 object-cover shadow-[6px_6px_0px_rgba(251,191,36,0.35)]"
+              />
+            </div>
+
+            <span className="inline-block border-2 border-amber-400 bg-amber-400 px-5 py-1.5 font-mono text-xs font-black uppercase text-black shadow-[4px_4px_0px_rgba(255,255,255,0.2)]">
+              TRABAJEMOS JUNTOS
+            </span>
+
+            <h2 className="text-3xl font-black uppercase tracking-tight text-white sm:text-5xl lg:text-6xl">
+              ¿NECESITAS UN SERVIDOR O INFRAESTRUCTURA ASÍ?
+            </h2>
+
+            <p className="mx-auto max-w-3xl font-mono text-xs sm:text-base leading-relaxed text-purple-200/90">
+              Logremos esto juntos. Diseños de red, servidores autohospedados y despliegues con infraestructura actual, moderna y segura.
+            </p>
+
+            <div className="pt-2 flex justify-center">
+              <Button
+                href={mcData.portfolioUrl}
+                target="_blank"
+                rel="noreferrer"
+                variant="destructive"
+                className="bg-[#fbbf24] text-black border-2 border-white hover:bg-amber-400 dark:border-amber-400 dark:bg-amber-400 dark:text-black font-black text-sm px-8 py-4 shadow-[6px_6px_0px_rgba(255,255,255,0.9)]"
+              >
+                [ CONTACTAR Y VER PORTAFOLIO ↗ ]
+              </Button>
+            </div>
+          </motion.div>
+
+          <div className="border-t border-white/20 w-full" />
+
+          <motion.div variants={staggerItemVariants} className="grid gap-8 md:grid-cols-3 font-mono text-xs sm:text-sm">
+            <div className="space-y-3">
+              <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">REDES & CONTACTO</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a href={mcData.githubUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white transition-colors flex items-center gap-2">
+                    <GithubIcon className="h-4 w-4" /> GitHub Repository ↗
+                  </a>
+                </li>
+                <li>
+                  <a href={mcData.portfolioUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white transition-colors">
+                    Portafolio Principal (JessVega.me) ↗
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">NAVEGACIÓN DE SERVIDOR</h3>
+              <ul className="space-y-2">
+                <li><a href="#descargas" className="text-purple-200 hover:text-white">Descargas de Modpacks</a></li>
+                <li><a href={mcData.blueMapUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white">Mapa en Vivo (http://mapa.mc.jessvega.me/)</a></li>
+                <li><a href="#infra" className="text-purple-200 hover:text-white">Arquitectura & Infraestructura</a></li>
+              </ul>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">INFRAESTRUCTURA</h3>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded border border-white/20">
+                  <img src={mcData.playitLogo} alt="Playit.gg" className="h-4 w-4 rounded-full object-cover" />
+                  <span className="text-xs font-bold text-amber-300">Playit.gg</span>
+                </div>
+                <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded border border-white/20">
+                  <img src={mcData.mediafireLogo} alt="MediaFire" className="h-3 w-auto object-contain" />
+                  <span className="text-xs font-bold text-amber-300">MediaFire</span>
+                </div>
+              </div>
+              <p className="text-xs text-purple-200/70 leading-relaxed pt-1">
+                © 2026 {mcData.title}. Powered by Jess Vega. Todos los derechos reservados.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
     </main>
   );
 }
