@@ -1,306 +1,445 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
-
-import { useState } from "react";
 import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { Check, Copy, Gamepad2, Wrench, PackageCheck, Map, ExternalLink, RefreshCw } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { staggerContainerVariants, staggerItemVariants } from "@/lib/animations";
+import { mcData } from "@/data/minecraft";
 
-type DownloadItem = {
-  title: string;
-  subtitle: string;
-  href: string;
-  icon: string;
-  accent: string;
-  label: string;
-  fallback: string;
-};
+import serverIcon from "@/assets/server-icon-hd.png";
+import flowersIcon from "@/assets/Flowers.jpg";
+import jovGlitchIcon from "@/assets/jov-glitch.png";
 
-const downloads: DownloadItem[] = [
-  {
-    title: "Official Forge",
-    subtitle: "Paquete base para servidores y clientes Forge.",
-    href: "https://www.mediafire.com/file/n8banoof7s55xmz/Official_Forge.zip/file",
-    icon: "https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/curseforge-1ggrlxplc9gjkajypnzcdh.png/curseforge-vqyvsa5do1rsh8njqkqpam.png?_a=DATAiZAAZAA0",
-    accent: "bg-[#ff3b30]",
-    label: "Forge",
-    fallback: "CF",
-  },
-  {
-    title: "Official Modrinth",
-    subtitle: "Instalación rápida con perfil Modrinth.",
-    href: "https://www.mediafire.com/file/7axzjtnfhzgrl6x/official_Modrinth.mrpack/file",
-    icon: "https://upload.wikimedia.org/wikipedia/commons/7/74/Prism_Launcher_logo.svg",
-    accent: "bg-[#00c853]",
-    label: "Modrinth",
-    fallback: "MR",
-  },
-  {
-    title: "Official PrismLauncher",
-    subtitle: "Perfil listo para PrismLauncher y arranque limpio.",
-    href: "https://www.mediafire.com/file/uga9zz0irev074k/Official_PrismLauncher.zip/file",
-    icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSW8EAqEiKCkEgSo3B1FgaEFBhF16nzwRhqzqaorZuaPilXyVM4mN1KwvBK&s=10",
-    accent: "bg-[#0066ff]",
-    label: "Prism",
-    fallback: "PL",
-  },
-];
-
-const tutorialSteps = [
-  "Descarga el perfil que coincida con tu launcher.",
-  "Abre BlueMap en la red interna y verifica el spawn.",
-  "Usa el mapa y los paquetes para preparar tu sesión o tutorial.",
-];
-
-function MotionFrame({ children, className = "", id }: { children: ReactNode; className?: string; id?: string }) {
+function GithubIcon({ className }: { className?: string }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.45, ease: "easeOut" }}
-      className={className}
-      id={id}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function BrandIcon({ src, alt, fallback, accent }: { src: string; alt: string; fallback: string; accent: string }) {
-  const [failed, setFailed] = useState(false);
-
-  if (failed) {
-    return (
-      <div className={`flex h-16 w-16 items-center justify-center border-2 border-black ${accent} text-xl font-black text-black shadow-[4px_4px_0_#000]`}>
-        {fallback}
-      </div>
-    );
-  }
-
-  return (
-    <img
-      src={src}
-      alt={alt}
-      onError={() => setFailed(true)}
-      className="h-16 w-16 border-2 border-black bg-white object-contain p-2 shadow-[4px_4px_0_#000]"
-    />
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+    </svg>
   );
 }
 
 export default function Home() {
+  const [copied, setCopied] = useState(false);
+  const [iframeKey, setIframeKey] = useState(0);
+
+  const copyIp = async () => {
+    await navigator.clipboard.writeText(mcData.serverIp);
+    setCopied(true);
+    toast.success("IP Copiada con éxito", {
+      description: mcData.serverIp,
+      className:
+        "rounded-none border-2 border-black bg-purple-900 text-amber-300 font-mono uppercase shadow-[6px_6px_0px_rgba(0,0,0,1)] dark:border-amber-400",
+    });
+    window.setTimeout(() => setCopied(false), 1600);
+  };
+
   return (
-    <main className="relative min-h-screen overflow-hidden bg-transparent text-black">
-      <div className="absolute inset-0 grid-noise opacity-50" />
-      <div className="absolute -left-24 top-16 h-72 w-72 rounded-full bg-[#ff3b30]/15 blur-3xl" />
-      <div className="absolute right-0 top-44 h-80 w-80 rounded-full bg-[#0066ff]/15 blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-[#00c853]/15 blur-3xl" />
+    <main className="dossier-grid-pattern relative min-h-screen w-full bg-[#faf8fc] text-black transition-colors duration-300 dark:bg-[#0b0714] dark:text-white overflow-x-hidden">
+      {/* Glow Effects */}
+      <div className="pointer-events-none absolute -left-20 top-10 h-[500px] w-[500px] rounded-full bg-purple-600/15 blur-3xl dark:bg-purple-900/25" />
+      <div className="pointer-events-none absolute right-0 top-1/3 h-[500px] w-[500px] rounded-full bg-amber-400/15 blur-3xl dark:bg-amber-400/20" />
 
-      <div className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
-        <header className="brutal-frame flex flex-col gap-4 p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 brutal-chip bg-[#fff3bf] px-3 py-1 text-[11px] font-black uppercase tracking-[0.24em]">
-              <span className="h-2 w-2 bg-[#ff3b30]" />
-              mc.jessvega.me
-            </div>
-            <h1 className="max-w-3xl text-3xl font-black uppercase leading-[0.92] tracking-tight sm:text-5xl lg:text-7xl">
-              Hola, soy Jess Vega.
-            </h1>
-          </div>
+      {/* Main Container */}
+      <div className="relative mx-auto flex w-full max-w-[1760px] flex-col gap-16 px-4 py-6 sm:gap-24 sm:px-6 md:px-10 lg:px-12 lg:py-10">
+        
+        {/* ========================================================================= */}
+        {/* SECCIÓN 1: HERO & LIVE BLUEMAP SIDE-BY-SIDE                               */}
+        {/* ========================================================================= */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={staggerContainerVariants}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch py-4 sm:py-6"
+        >
+          {/* Columna Izquierda: Server Info, Server Icon & Copy Box */}
+          <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
+            <motion.div variants={staggerItemVariants} className="flex items-center gap-3">
+              <Image
+                src={serverIcon}
+                alt="Server Icon HD"
+                className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl border-2 border-black object-cover shadow-[3px_3px_0px_rgba(0,0,0,1)] dark:border-amber-400"
+                priority
+              />
+              <span className="inline-block border-2 border-black bg-[#fbbf24] px-4 py-1.5 font-mono text-xs font-black uppercase tracking-widest text-black shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:border-amber-400 dark:bg-[#facc15] dark:shadow-[4px_4px_0px_rgba(250,204,21,0.4)]">
+                SERVIDOR ONLINE // PUERTO 25565
+              </span>
+            </motion.div>
 
-          <div className="grid gap-3 lg:max-w-xl">
-            <div className="flex flex-wrap gap-2">
-              {[
-                ["Next.js", "bg-[#ffde59]"],
-                ["Tailwind", "bg-[#9ef01a]"],
-                ["framer-motion", "bg-[#ff7eb6]"],
-                ["Minecraft", "bg-[#7cc6fe]"],
-              ].map(([label, tone]) => (
-                <span key={label} className={`brutal-chip px-3 py-2 text-xs font-black uppercase tracking-[0.18em] ${tone}`}>
-                  {label}
-                </span>
-              ))}
-            </div>
-          </div>
-        </header>
-
-        <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <MotionFrame className="brutal-frame relative overflow-hidden p-5 sm:p-7 bg-[#fff8f0]">
-            <div className="absolute right-4 top-4 brutal-chip bg-[#ffb703] px-3 py-1 text-[11px] font-black uppercase tracking-[0.22em]">
-              Portafolio
-            </div>
-            <p className="text-sm font-black uppercase tracking-[0.28em] text-black/60">Hola</p>
-            <h2 className="mt-3 max-w-2xl text-4xl font-black uppercase leading-none sm:text-6xl">
-              Un portafolio para mostrar mi mundo de Minecraft.
-            </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 sm:text-lg">
-              Todo lo importante está en una sola página: el mapa, las descargas y una guía rápida para que cualquiera se ubique al instante.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="#map"
-                className="brutal-frame-soft brutal-hover !bg-[#ff3b30] px-5 py-3 text-sm font-black uppercase tracking-[0.18em] !text-black"
-              >
-                Ver mapa
-              </a>
-              <a
-                href="#downloads"
-                className="brutal-frame-soft brutal-hover !bg-[#0066ff] px-5 py-3 text-sm font-black uppercase tracking-[0.18em] !text-white"
-              >
-                Descargar modpacks
-              </a>
-            </div>
-
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              {[
-                ["Tutoriales", "Pasos cortos y útiles"],
-                ["Mundo", "BlueMap listo para explorar"],
-                ["Descargas", "Links directos y claros"],
-              ].map(([title, copy]) => (
-                <div key={title} className="brutal-chip bg-[#e8ffef] p-4">
-                  <p className="text-sm font-black uppercase tracking-[0.18em]">{title}</p>
-                  <p className="mt-2 text-sm leading-6">{copy}</p>
-                </div>
-              ))}
-            </div>
-          </MotionFrame>
-
-          <MotionFrame className="brutal-frame flex flex-col justify-between gap-4 p-5 sm:p-7 bg-[#e7f1ff]">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.28em] text-black/60">Estado rápido</p>
-              <div className="mt-3 space-y-3">
-                <div className="brutal-chip flex items-center justify-between bg-white px-4 py-3 text-sm font-black uppercase tracking-[0.18em]">
-                  <span>BlueMap</span>
-                  <span className="text-[#00c853]">Online</span>
-                </div>
-                <div className="brutal-chip flex items-center justify-between bg-white px-4 py-3 text-sm font-black uppercase tracking-[0.18em]">
-                  <span>Red</span>
-                  <span>10.89.2.87:8100</span>
-                </div>
+            {/* Title Renamed to MC.JESSVEGA.ME */}
+            <motion.div variants={staggerItemVariants} className="space-y-3">
+              <div className="flex items-center gap-4">
+                <h1 className="font-mono text-4xl font-black uppercase tracking-tight text-black sm:text-6xl lg:text-7xl xl:text-8xl leading-none dark:text-white">
+                  {mcData.title}
+                </h1>
               </div>
-            </div>
 
-            <div className="brutal-frame-soft grid gap-4 bg-[#fff3bf] p-4">
-              <p className="text-sm font-black uppercase tracking-[0.24em]">Guía rápida</p>
-              <ol className="space-y-3 text-sm leading-6">
-                {tutorialSteps.map((step, index) => (
-                  <li key={step} className="flex gap-3">
-                    <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center border-2 border-black bg-white font-black shadow-[3px_3px_0_#000]">
-                      {index + 1}
-                    </span>
-                    <span>{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </MotionFrame>
-        </section>
+              <div className="h-1.5 w-24 bg-[#7c3aed] dark:bg-[#facc15]" />
 
-        <section id="map" className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <MotionFrame className="brutal-frame overflow-hidden p-4 sm:p-5 bg-[#fff7fb]">
-            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-black uppercase tracking-[0.28em] text-black/60">Mapa</p>
-                <h3 className="text-2xl font-black uppercase">BlueMap Live View</h3>
-              </div>
+              <p className="font-mono text-sm leading-relaxed text-black/80 sm:text-base lg:text-lg dark:text-purple-200/90">
+                {mcData.subtitle}
+              </p>
+            </motion.div>
+
+            {/* Consola IP Box */}
+            <motion.div variants={staggerItemVariants} className="w-full">
+              <button
+                onClick={copyIp}
+                type="button"
+                className="group w-full border-2 border-black bg-black p-5 text-left text-white shadow-[6px_6px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1 cursor-pointer dark:border-amber-400 dark:bg-[#170e2b] dark:text-amber-300 dark:shadow-[6px_6px_0px_rgba(251,191,36,0.35)]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-white/20 bg-white/10 text-amber-300 dark:border-amber-400/40 dark:bg-amber-400/10">
+                    {copied ? <Check className="h-6 w-6 text-emerald-400" /> : <Gamepad2 className="h-6 w-6" />}
+                  </div>
+                  <div className="grow">
+                    <div className="flex items-center justify-between font-mono text-xs sm:text-sm font-black uppercase tracking-wider text-amber-400 dark:text-amber-300">
+                      <span>ENTRAR AL SERVIDOR MINECRAFT</span>
+                      <span className="text-[10px] sm:text-xs text-white/70 group-hover:text-white font-semibold">
+                        {copied ? "[COPIADO!]" : "[COPIAR IP]"}
+                      </span>
+                    </div>
+                    <p className="mt-1 font-mono text-xs text-white/80 dark:text-purple-200/90">
+                      IP: <span className="font-bold text-[#facc15]">{mcData.serverIp}</span> • Modpack oficial self-hosted
+                    </p>
+                  </div>
+                </div>
+              </button>
+            </motion.div>
+
+            {/* Buttons Row */}
+            <motion.div variants={staggerItemVariants} className="flex flex-wrap gap-4 items-center pt-2">
+              <Button href="#descargas" className="px-6 py-3.5 text-xs sm:text-sm font-black">
+                <PackageCheck className="h-4 w-4" />
+                DESCARGAR MODPACKS
+              </Button>
+
+              <Button href={mcData.blueMapUrl} variant="outline" target="_blank" rel="noreferrer" className="px-6 py-3.5 text-xs sm:text-sm font-black">
+                ABRIR BLUEMAP ↗
+              </Button>
+            </motion.div>
+
+            {/* Badges, Casual Icon (Flowers.jpg) & Powered By Sponsors */}
+            <motion.div variants={staggerItemVariants} className="flex flex-wrap items-center gap-3 pt-2">
               <a
-                href="http://mapa.mc.jessvega.me/"
+                href={mcData.portfolioUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="brutal-chip brutal-hover !bg-[#00c853] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] !text-black"
+                className="inline-flex items-center gap-2 border-2 border-black bg-purple-700 px-3.5 py-1.5 font-mono text-[11px] font-black uppercase text-white shadow-[3px_3px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-0.5 dark:border-amber-400 dark:bg-purple-900 dark:text-amber-300"
               >
-                Abrir en pestaña
+                <Image src={flowersIcon} alt="Jess Vega Casual" className="h-5 w-5 rounded-full object-cover border border-white" />
+                <span>POWERED BY JESSVEGA.ME</span>
+                <ExternalLink className="h-3.5 w-3.5" />
               </a>
-            </div>
 
-            <div className="relative aspect-[16/10] overflow-hidden border-4 border-black bg-white shadow-[8px_8px_0_#000]">
-              <iframe
-                src="http://mapa.mc.jessvega.me/"
-                title="BlueMap"
-                className="h-full w-full"
-                loading="lazy"
-              />
-            </div>
-          </MotionFrame>
+              <div className="inline-flex items-center gap-2 border-2 border-black bg-white px-3.5 py-1.5 font-mono text-[11px] font-black uppercase text-black shadow-[3px_3px_0px_rgba(0,0,0,1)] dark:border-amber-400 dark:bg-[#170e2b] dark:text-amber-300">
+                <img src={mcData.playitLogo} alt="Playit.gg" className="h-4 w-4 rounded-full object-cover" />
+                <span>PLAYIT.GG</span>
+              </div>
 
-          <MotionFrame className="brutal-frame flex flex-col gap-4 p-4 sm:p-5 bg-[#f1fff6]" id="downloads">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.28em] text-black/60">Descargas</p>
-              <h3 className="mt-1 text-2xl font-black uppercase">Mods y launchers</h3>
-            </div>
+              <div className="inline-flex items-center gap-2 border-2 border-black bg-white px-3.5 py-1.5 font-mono text-[11px] font-black uppercase text-black shadow-[3px_3px_0px_rgba(0,0,0,1)] dark:border-amber-400 dark:bg-[#170e2b] dark:text-amber-300">
+                <img src={mcData.mediafireLogo} alt="MediaFire" className="h-3.5 w-auto object-contain" />
+                <span>MEDIAFIRE</span>
+              </div>
+            </motion.div>
+          </div>
 
-            <div className="grid gap-4">
-              {downloads.map((item) => (
-                <article key={item.title} className="brutal-frame-soft bg-white p-4">
-                  <div className="flex gap-4">
-                    <BrandIcon src={item.icon} alt={item.title} fallback={item.fallback} accent={item.accent} />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h4 className="text-lg font-black uppercase leading-none">{item.title}</h4>
-                        <span className={`brutal-chip px-2 py-1 text-[10px] font-black uppercase tracking-[0.18em] ${item.accent}`}>{item.label}</span>
-                      </div>
-                      <p className="mt-2 text-sm leading-6 text-black/80">{item.subtitle}</p>
-                    </div>
+          {/* Columna Derecha: BlueMap Iframe Embed (Recuadro del mismo tamaño) */}
+          <div className="lg:col-span-6 min-h-[480px] sm:min-h-[580px] lg:min-h-[640px] flex flex-col">
+            <motion.div variants={staggerItemVariants} className="h-full flex flex-col">
+              <div className="flex-1 border-2 border-black bg-black shadow-[8px_8px_0px_rgba(0,0,0,1)] dark:border-amber-400 dark:shadow-[8px_8px_0px_rgba(251,191,36,0.35)] flex flex-col overflow-hidden">
+                {/* Header Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-black bg-purple-900 p-3 text-white dark:border-amber-400 dark:bg-purple-950 shrink-0">
+                  <div className="flex items-center gap-2 font-mono text-xs font-black uppercase tracking-wider text-amber-300">
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>BLUEMAP LIVE // HTTP://MAPA.MC.JESSVEGA.ME/</span>
                   </div>
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <span className="text-xs font-black uppercase tracking-[0.22em] text-black/60">MediaFire</span>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIframeKey((k) => k + 1)}
+                      type="button"
+                      className="inline-flex items-center gap-1 border border-amber-400/40 bg-white/10 px-2.5 py-1 font-mono text-[11px] font-bold text-amber-300 hover:bg-white/20 transition cursor-pointer"
+                    >
+                      <RefreshCw className="h-3 w-3" /> Recargar
+                    </button>
+
                     <a
+                      href={mcData.blueMapUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 border border-amber-400 bg-amber-400 px-3 py-1 font-mono text-[11px] font-black text-black hover:bg-amber-300 transition"
+                    >
+                      Pantalla Completa <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Embedded Live Iframe */}
+                <div className="relative flex-1 w-full min-h-[400px] bg-black">
+                  <iframe
+                    key={iframeKey}
+                    src={mcData.blueMapUrl}
+                    title="BlueMap Live Server Map"
+                    className="w-full h-full border-0"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* ========================================================================= */}
+        {/* SECCIÓN 2: DESCARGAS DE MODPACKS (#descargas)                             */}
+        {/* ========================================================================= */}
+        <motion.section
+          id="descargas"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={staggerContainerVariants}
+          className="space-y-10 py-6"
+        >
+          <motion.div variants={staggerItemVariants} className="text-center space-y-3">
+            <div className="inline-flex items-center gap-3 justify-center">
+              <div className="flex h-12 w-12 items-center justify-center border-2 border-black bg-[#fbbf24] shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:border-amber-400 dark:bg-[#facc15] text-black">
+                <PackageCheck className="h-6 w-6" />
+              </div>
+              <h2 className="text-3xl font-black uppercase sm:text-5xl text-black dark:text-white">
+                CLIENTES Y MODPACKS
+              </h2>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 pt-1">
+              <span className="font-mono text-xs font-bold uppercase text-slate-600 dark:text-purple-300">
+                POWERED BY MEDIAFIRE
+              </span>
+              <img src={mcData.mediafireLogo} alt="MediaFire" className="h-4 w-auto object-contain" />
+            </div>
+
+            <div className="mx-auto h-1.5 w-24 bg-[#7c3aed] dark:bg-[#facc15]" />
+          </motion.div>
+
+          {/* Timeline Nodes (01, 02, 03) */}
+          <motion.div variants={staggerItemVariants} className="relative hidden md:block max-w-5xl mx-auto my-6">
+            <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-black dark:bg-amber-400 -translate-y-1/2 z-0" />
+            <div className="relative z-10 flex justify-between px-20">
+              {mcData.downloads.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex h-12 w-12 items-center justify-center border-2 border-black bg-purple-600 font-mono text-sm font-black text-amber-300 shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:border-amber-400 dark:bg-purple-900"
+                >
+                  {item.id}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Grid de 3 Tarjetas con Iconos de Modpacks */}
+          <div className="grid gap-6 md:grid-cols-3">
+            {mcData.downloads.map((item) => (
+              <motion.div key={item.id} variants={staggerItemVariants}>
+                <Card interactive className="flex flex-col h-full p-2">
+                  <CardHeader className="p-5 pb-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <img src={item.icon} alt={item.name} className="h-10 w-10 object-contain shrink-0" />
+                        <span className="font-mono text-xs font-black uppercase text-[#7c3aed] dark:text-amber-400">
+                          OPCIÓN {item.id}
+                        </span>
+                      </div>
+                      <Badge className="bg-[#fbbf24] text-black dark:bg-amber-400 dark:text-black px-2.5 py-1 text-xs">
+                        {item.badge}
+                      </Badge>
+                    </div>
+                    <CardTitle className="mt-3 text-2xl sm:text-3xl">{item.name}</CardTitle>
+                    <div className="h-1.5 w-14 bg-[#7c3aed] dark:bg-amber-400 mt-2" />
+                  </CardHeader>
+
+                  <CardContent className="grow p-5 pt-2">
+                    <CardDescription className="text-sm leading-relaxed">{item.desc}</CardDescription>
+                  </CardContent>
+
+                  <CardFooter className="p-5 pt-2 flex flex-col gap-3">
+                    <Button
                       href={item.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="brutal-hover brutal-chip !bg-[#ff3b30] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] !text-black"
+                      className="w-full bg-purple-700 text-amber-300 dark:bg-amber-400 dark:text-black hover:bg-purple-800 py-3.5 font-black text-xs"
                     >
-                      Descargar
-                    </a>
-                  </div>
-                </article>
-              ))}
+                      DESCARGAR {item.badge} ↗
+                    </Button>
+                    <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono text-slate-500 dark:text-purple-300">
+                      <span>DESCARGA DIRECTA MEDIAFIRE</span>
+                      <img src={mcData.mediafireLogo} alt="MediaFire" className="h-2.5 w-auto object-contain opacity-70" />
+                    </div>
+                  </CardFooter>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* ========================================================================= */}
+        {/* SECCIÓN 3: INFRAESTRUCTURA (#infra)                                       */}
+        {/* ========================================================================= */}
+        <motion.section
+          id="infra"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={staggerContainerVariants}
+          className="space-y-10 py-6"
+        >
+          <motion.div variants={staggerItemVariants} className="text-center space-y-3">
+            <div className="inline-flex items-center gap-3 justify-center">
+              <div className="flex h-12 w-12 items-center justify-center border-2 border-black bg-purple-700 shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:border-amber-400 text-amber-300">
+                <Wrench className="h-6 w-6" />
+              </div>
+              <h2 className="text-3xl font-black uppercase sm:text-5xl text-black dark:text-white">
+                ARQUITECTURA DEL SERVIDOR
+              </h2>
             </div>
-          </MotionFrame>
-        </section>
+            <div className="mx-auto h-1.5 w-24 bg-[#7c3aed] dark:bg-[#facc15]" />
+          </motion.div>
 
-        <MotionFrame className="brutal-frame flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6 bg-[#fff0e6]">
-          <div className="max-w-3xl space-y-2">
-            <p className="text-sm font-black uppercase tracking-[0.28em] text-black/60">Tutoriales</p>
-            <h3 className="text-2xl font-black uppercase sm:text-3xl">Directo al punto: mirar, bajar y jugar.</h3>
-            <p className="text-sm leading-6 sm:text-base">
-              Esta versión está pensada como presentación de portafolio: breve, colorida y clara, sin sentirse como una demo técnica.
-            </p>
+          <div className="grid gap-6 md:grid-cols-3">
+            {mcData.infra.map((item) => (
+              <motion.div key={item.id} variants={staggerItemVariants}>
+                <Card interactive className="flex flex-col h-full p-2">
+                  <CardHeader className="p-5 pb-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs font-black text-amber-500 dark:text-amber-400">
+                        {item.id}
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        {item.logo ? (
+                          <img src={item.logo} alt="Playit.gg" className="h-6 w-6 rounded-full object-cover border border-black dark:border-amber-400" />
+                        ) : null}
+                        {item.tags.map((tag) => (
+                          <Badge key={tag} className="bg-purple-700 text-white dark:bg-purple-900 dark:text-amber-300 px-2.5 py-0.5 text-[11px]">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <CardTitle className="mt-3 text-xl sm:text-2xl">{item.title}</CardTitle>
+                    <div className="h-1.5 w-14 bg-purple-600 dark:bg-amber-400 mt-2" />
+                  </CardHeader>
+
+                  <CardContent className="grow p-5 pt-2">
+                    <CardDescription className="text-sm leading-relaxed">{item.desc}</CardDescription>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
+        </motion.section>
 
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="https://www.mediafire.com/file/n8banoof7s55xmz/Official_Forge.zip/file"
-              target="_blank"
-              rel="noreferrer"
-              className="brutal-chip brutal-hover !bg-black px-4 py-3 text-xs font-black uppercase tracking-[0.22em] !text-[#fff3bf]"
-            >
-              Forge Pack
-            </a>
-            <a
-              href="https://www.mediafire.com/file/7axzjtnfhzgrl6x/official_Modrinth.mrpack/file"
-              target="_blank"
-              rel="noreferrer"
-              className="brutal-chip brutal-hover !bg-[#00c853] px-4 py-3 text-xs font-black uppercase tracking-[0.22em] !text-black"
-            >
-              Modrinth Pack
-            </a>
-            <a
-              href="https://www.mediafire.com/file/uga9zz0irev074k/Official_PrismLauncher.zip/file"
-              target="_blank"
-              rel="noreferrer"
-              className="brutal-chip brutal-hover !bg-[#0066ff] px-4 py-3 text-xs font-black uppercase tracking-[0.22em] !text-white"
-            >
-              Prism Launcher
-            </a>
-          </div>
-        </MotionFrame>
-
-        <footer className="pb-2 text-center text-[11px] font-black uppercase tracking-[0.3em] text-black/55">
-          mc.jessvega.me // mapa, mods y tutoriales
-        </footer>
       </div>
+
+      {/* ========================================================================= */}
+      {/* SECCIÓN 4: PITCH COMERCIAL & CONTACTO (Professional Freelance Avatar)     */}
+      {/* ========================================================================= */}
+      <motion.section
+        id="contacto"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={staggerContainerVariants}
+        className="w-full border-t-4 border-black bg-black p-8 sm:p-14 lg:p-20 text-white dark:border-amber-400 dark:bg-[#06030b] mt-12"
+      >
+        <div className="mx-auto max-w-[1760px] space-y-14">
+          <motion.div variants={staggerItemVariants} className="text-center space-y-6">
+            {/* Professional Freelance Contact Avatar */}
+            <div className="flex justify-center">
+              <Image
+                src={jovGlitchIcon}
+                alt="Jess Vega Freelance / Contact"
+                className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-2 border-amber-400 object-cover shadow-[6px_6px_0px_rgba(251,191,36,0.35)]"
+              />
+            </div>
+
+            <span className="inline-block border-2 border-amber-400 bg-amber-400 px-5 py-1.5 font-mono text-xs font-black uppercase text-black shadow-[4px_4px_0px_rgba(255,255,255,0.2)]">
+              TRABAJEMOS JUNTOS
+            </span>
+
+            <h2 className="text-3xl font-black uppercase tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
+              ¿NECESITAS UN SERVIDOR O INFRAESTRUCTURA ASÍ?
+            </h2>
+
+            <p className="mx-auto max-w-3xl font-mono text-xs sm:text-base leading-relaxed text-purple-200/90">
+              Logremos esto juntos. Diseños de red, servidores autohospedados y despliegues con infraestructura actual, moderna y segura.
+            </p>
+
+            <div className="pt-2 flex justify-center">
+              <Button
+                href={mcData.portfolioUrl}
+                target="_blank"
+                rel="noreferrer"
+                variant="destructive"
+                className="bg-[#fbbf24] text-black border-2 border-white hover:bg-amber-400 dark:border-amber-400 dark:bg-amber-400 dark:text-black font-black text-sm px-8 py-4 shadow-[6px_6px_0px_rgba(255,255,255,0.9)]"
+              >
+                [ CONTACTAR Y VER PORTAFOLIO ↗ ]
+              </Button>
+            </div>
+          </motion.div>
+
+          <div className="border-t border-white/20 w-full" />
+
+          <motion.div variants={staggerItemVariants} className="grid gap-8 md:grid-cols-3 font-mono text-xs sm:text-sm">
+            <div className="space-y-3">
+              <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">REDES & CONTACTO</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a href={mcData.githubUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white transition-colors flex items-center gap-2">
+                    <GithubIcon className="h-4 w-4" /> GitHub Repository ↗
+                  </a>
+                </li>
+                <li>
+                  <a href={mcData.portfolioUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white transition-colors">
+                    Portafolio Principal (JessVega.me) ↗
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">NAVEGACIÓN DE SERVIDOR</h3>
+              <ul className="space-y-2">
+                <li><a href="#descargas" className="text-purple-200 hover:text-white">Descargas de Modpacks</a></li>
+                <li><a href={mcData.blueMapUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white">Mapa en Vivo (http://mapa.mc.jessvega.me/)</a></li>
+                <li><a href="#infra" className="text-purple-200 hover:text-white">Arquitectura & Infraestructura</a></li>
+              </ul>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">SPONSORS & INFRAESTRUCTURA</h3>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded border border-white/20">
+                  <img src={mcData.playitLogo} alt="Playit.gg" className="h-4 w-4 rounded-full object-cover" />
+                  <span className="text-xs font-bold text-amber-300">Playit.gg</span>
+                </div>
+                <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded border border-white/20">
+                  <img src={mcData.mediafireLogo} alt="MediaFire" className="h-3 w-auto object-contain" />
+                  <span className="text-xs font-bold text-amber-300">MediaFire</span>
+                </div>
+              </div>
+              <p className="text-xs text-purple-200/70 leading-relaxed pt-1">
+                © 2026 {mcData.title}. Powered by Jess Vega. Todos los derechos reservados.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
     </main>
   );
 }
