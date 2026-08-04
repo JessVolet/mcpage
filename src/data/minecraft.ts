@@ -3,7 +3,7 @@ export const mcData = {
   title: "MC.JESSVEGA.ME",
   subtitle: "Servidor privado de Minecraft con mods, infraestructura dedicada y alta disponibilidad.",
   serverIp: "mc.jessvega.me",
-  blueMapUrl: "http://mapa.mc.jessvega.me/",
+  blueMapUrl: "https://mapa.mc.jessvega.me/",
   portfolioUrl: "https://jessvega.me",
   githubUrl: "https://github.com/JessVolet/ServerInfraestructureDockers",
   mediafireLogo: "https://static.cdnlogo.com/logos/m/74/mediafire-wordmark.svg",

@@ -157,7 +157,7 @@ export default function Home() {
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-black bg-purple-900 p-3 text-white dark:border-amber-400 dark:bg-purple-950 shrink-0">
                   <div className="flex items-center gap-2 font-mono text-xs font-black uppercase tracking-wider text-amber-300">
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>BLUEMAP LIVE // HTTP://MAPA.MC.JESSVEGA.ME/</span>
+                    <span>BLUEMAP LIVE // HTTPS://MAPA.MC.JESSVEGA.ME/</span>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -415,7 +415,7 @@ export default function Home() {
               <h3 className="font-black text-sm uppercase tracking-widest text-[#facc15]">NAVEGACIÓN DE SERVIDOR</h3>
               <ul className="space-y-2">
                 <li><a href="#descargas" className="text-purple-200 hover:text-white">Descargas de Modpacks</a></li>
-                <li><a href={mcData.blueMapUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white">Mapa en Vivo (http://mapa.mc.jessvega.me/)</a></li>
+                <li><a href={mcData.blueMapUrl} target="_blank" rel="noreferrer" className="text-purple-200 hover:text-white">Mapa en Vivo (https://mapa.mc.jessvega.me/)</a></li>
                 <li><a href="#infra" className="text-purple-200 hover:text-white">Arquitectura & Infraestructura</a></li>
               </ul>
             </div>
