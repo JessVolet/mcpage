@@ -5,6 +5,11 @@ import { Toaster } from "sonner";
 export const metadata: Metadata = {
   title: "JV_SYSTEM",
   description: "Landing Neo-Brutalista para el servidor privado de Minecraft de Jess Vega.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favico.ico",
+    apple: "/server-icon-hd.png"
+  }
 };
 
 export default function RootLayout({

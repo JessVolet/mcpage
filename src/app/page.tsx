@@ -12,8 +12,10 @@ import { staggerContainerVariants, staggerItemVariants } from "@/lib/animations"
 import { mcData } from "@/data/minecraft";
 
 import serverIcon from "@/assets/server-icon-hd.png";
+import favIcon from "@/assets/favico.ico";
 import flowersIcon from "@/assets/Flowers.jpg";
 import jovGlitchIcon from "@/assets/jov-glitch.png";
+import ServerHeaderBanner from "@/components/ServerHeaderBanner";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -45,7 +47,7 @@ export default function Home() {
       <div className="pointer-events-none absolute right-0 top-1/3 h-[500px] w-[500px] rounded-full bg-amber-400/15 blur-3xl dark:bg-amber-400/20" />
 
       {/* Main Outer Container */}
-      <div className="relative mx-auto flex w-full flex-col gap-16 px-4 py-6 sm:gap-24 sm:px-6 md:px-10 lg:px-12 lg:py-10">
+      <div className="relative mx-auto flex w-full flex-col gap-16 px-4 py-6 sm:gap-24 sm:px-6 md:px-10 lg:px-12 lg:py-10 container">
 
         {/* ========================================================================= */}
         {/* SECCIÓN 1: HERO & LIVE BLUEMAP SIDE-BY-SIDE (Ultra Wide Span)             */}
@@ -59,22 +61,14 @@ export default function Home() {
         >
           {/* Columna Izquierda: Server Info, Server Icon & Copy Box */}
           <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
-            <motion.div variants={staggerItemVariants} className="flex items-center gap-3">
-              <Image
-                src={serverIcon}
-                alt="Server Icon HD"
-                className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl border-2 border-black object-cover shadow-[3px_3px_0px_rgba(0,0,0,1)] dark:border-amber-400"
-                priority
-              />
-              <span className="inline-block border-2 border-black bg-[#fbbf24] px-4 py-1.5 font-mono text-xs font-black uppercase tracking-widest text-black shadow-[4px_4px_0px_rgba(0,0,0,1)] dark:border-amber-400 dark:bg-[#facc15] dark:shadow-[4px_4px_0px_rgba(250,204,21,0.4)]">
-                SERVIDOR ONLINE // PUERTO 25565
-              </span>
+            <motion.div variants={staggerItemVariants}>
+              <ServerHeaderBanner serverIconSrc={serverIcon.src} favIconSrc={favIcon.src} />
             </motion.div>
 
             {/* Title Renamed to MC.JESSVEGA.ME */}
             <motion.div variants={staggerItemVariants} className="space-y-3">
               <div className="flex items-center gap-4">
-                <h1 className="font-mono text-4xl font-black uppercase tracking-tight text-black sm:text-6xl lg:text-7xl xl:text-8xl leading-none dark:text-white">
+                <h1 className="font-mono text-4xl font-black uppercase tracking-tight text-black sm:text-5xl lg:text-6xl xl:text-7xl leading-none dark:text-white">
                   {mcData.title}
                 </h1>
               </div>
