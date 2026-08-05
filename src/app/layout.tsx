@@ -3,8 +3,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "JV_SYSTEM",
-  description: "Landing Neo-Brutalista para el servidor privado de Minecraft de Jess Vega.",
+  title: "MC-JV",
+  description: "Servidor publico de Minecraft de Jess Vega.",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favico.ico",

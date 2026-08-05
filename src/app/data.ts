@@ -44,7 +44,7 @@ export const siteCopy = {
   architectureEmptyLabel: "Infraestructura Activa",
   architectureEmptyCopy: "100% Self-Hosted. Docker, Tailscale y Proxy Inverso configurados a mano para garantizar alta disponibilidad.",
   footer: "© 2026 Violet Node. Diseñado y desplegado por Jose Vega.",
-  
+
   // NUEVO: Textos para la sección de ventas / promoción
   ctaTitle: "¿NECESITAS UN SERVIDOR O INFRAESTRUCTURA ASÍ?",
   ctaSubtitle: "Construyo arquitecturas escalables, seguras y autohospedadas. Desde servidores de juegos optimizados hasta backends empresariales complejos.",
@@ -112,7 +112,7 @@ export const infraFeatures: InfraFeatureItem[] = [
 export const socials: SocialItem[] = [
   { label: "PORTAFOLIO", href: "https://jessvega.me" },
   { label: "GITHUB", href: "https://github.com/Jov-glitch" },
-  { label: "LINKEDIN", href: "https://linkedin.com/in/jose-vega" }, 
+  { label: "LINKEDIN", href: "https://linkedin.com/in/jose-vega" },
 ];
 
 // 7. CRÉDITOS Y PROMOCIÓN FINAL
