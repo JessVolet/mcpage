@@ -24,8 +24,6 @@ interface ServerHeaderBannerProps {
   initialStatusData?: ServerStatusResponse;
 }
 
-const RAND_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-
 const ServerHeaderBanner: React.FC<ServerHeaderBannerProps> = ({
   serverIconSrc,
   favIconSrc,
@@ -61,27 +59,6 @@ const ServerHeaderBanner: React.FC<ServerHeaderBannerProps> = ({
       clearInterval(interval);
     };
   }, [serverAddress]);
-
-  // Animación para el efecto de obfuscated / §k de Minecraft
-  useEffect(() => {
-    if (!motdRef.current) return;
-
-    const obfuscatedEls = motdRef.current.querySelectorAll('.minecraft-format-obfuscated');
-    if (!obfuscatedEls.length) return;
-
-    const interval = setInterval(() => {
-      obfuscatedEls.forEach((el) => {
-        const length = 34;
-        let randStr = '';
-        for (let i = 0; i < length; i++) {
-          randStr += RAND_CHARS.charAt(Math.floor(Math.random() * RAND_CHARS.length));
-        }
-        el.textContent = randStr;
-      });
-    }, 10);
-
-    return () => clearInterval(interval);
-  }, [statusData]);
 
   const isOnline = statusData?.online ?? true;
   const onlinePlayers = statusData?.players?.online ?? 0;
